@@ -40,13 +40,16 @@
   ansible.builtin.copy:
     src: docker_images.tar
     dest: ~/ansible/docker_images.tar
+  register: docker_images
 - name: Import docker images to microk8s internal docker image registry
+  when: docker_images.changed
   become: yes
   command: microk8s ctr image import ~/ansible/docker_images.tar
   register: command_output4
 - debug:
     var: command_output4.stdout_lines
 - name: Show all images in microk8s internal image registry
+  when: docker_images.changed
   become: yes
   command: microk8s ctr image list
   register: command_output5

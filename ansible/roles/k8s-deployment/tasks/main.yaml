@@ -7,7 +7,7 @@
   with_filetree: "{{ deployment_directory }}"
   when:
    - item2.state == 'file'
-   - ((item2.src | basename).startswith('k8s-first') or (item2.src | basename).startswith(env + "k8s-first"))
+   - (item2.src | basename).startswith('k8s-first')
   loop_control:
     loop_var: item2
 - name: Apply k8s second step yaml
@@ -18,7 +18,7 @@
   with_filetree: "{{ deployment_directory }}"
   when:
     - item2.state == 'file'
-    - ((item2.src | basename).startswith('k8s-second') or (item2.src | basename).startswith(env + "k8s-second"))
+    - (item2.src | basename).startswith('k8s-second')
   loop_control:
     loop_var: item2
 - name: Apply k8s third step yaml
@@ -29,7 +29,7 @@
   with_filetree: "{{ deployment_directory }}"
   when:
     - item2.state == 'file'
-    - ((item2.src | basename).startswith('k8s-third') or (item2.src | basename).startswith(env + "k8s-third"))
+    - (item2.src | basename).startswith('k8s-third')
   loop_control:
     loop_var: item2
 - name: Apply k8s other yaml
@@ -40,9 +40,9 @@
   with_filetree: "{{ deployment_directory }}"
   when:
    - item2.state == 'file'
-   - ((item2.src | basename).startswith('k8s-') or item2.src.startswith(env + "k8s-"))
-   - not ((item2.src | basename).startswith('k8s-first') or (item2.src | basename).startswith(env + "k8s-first"))
-   - not ((item2.src | basename).startswith('k8s-second') or (item2.src | basename).startswith(env + "k8s-second"))
-   - not ((item2.src | basename).startswith('k8s-third') or (item2.src | basename).startswith(env + "k8s-third"))
+   - (item2.src | basename).startswith('k8s-')
+   - not (item2.src | basename).startswith('k8s-first')
+   - not (item2.src | basename).startswith('k8s-second')
+   - not (item2.src | basename).startswith('k8s-third')
   loop_control:
     loop_var: item2

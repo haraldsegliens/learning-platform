@@ -27,7 +27,7 @@ spec:
             - name: LIMESURVEY_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
+                  name: mysql
                   key: password
             - name: LIMESURVEY_ADMIN_USER
               value: admin
@@ -57,6 +57,22 @@ spec:
             limits:
               memory: 512Mi
               cpu: 500m
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
       volumes:
         - name: pvc
           persistentVolumeClaim:

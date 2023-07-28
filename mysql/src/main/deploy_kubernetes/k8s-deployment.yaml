@@ -25,7 +25,7 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
+                  name: @project.artifactId@
                   key: password
           volumeMounts:
             - mountPath: /var/lib/mysql
@@ -40,6 +40,40 @@ spec:
             limits:
               memory: 751619276800m
               cpu: 1000m
+          startupProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - "-h"
+                - localhost
+                - "-u"
+                - root
+                - "-p$MYSQL_ROOT_PASSWORD"
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - "-h"
+                - localhost
+                - "-u"
+                - root
+                - "-p$MYSQL_ROOT_PASSWORD"
+            periodSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - mysqladmin
+                - ping
+                - "-h"
+                - localhost
+                - "-u"
+                - root
+                - "-p$MYSQL_ROOT_PASSWORD"
+            periodSeconds: 5
       volumes:
         - name: pvc
           persistentVolumeClaim:

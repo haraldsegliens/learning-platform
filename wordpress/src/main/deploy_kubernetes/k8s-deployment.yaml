@@ -1,0 +1,38 @@
+---
+kind: Deployment
+apiVersion: v1
+metadata:
+  name: @project.artifactId@
+  namespace: paks
+  labels:
+    app: @project.artifactId@
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: @project.artifactId@
+  template:
+    metadata:
+      labels:
+        app: @project.artifactId@
+    spec:
+      containers:
+        - name: @project.artifactId@
+          image: redis:6.2.1-alpine3.13
+          volumeMounts:
+            - mountPath: /data
+              name: pvc
+          ports:
+            - containerPort: 6379
+              name: redis
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 150m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+      volumes:
+        - name: pvc
+          persistentVolumeClaim:
+            claimName: @project.artifactId@

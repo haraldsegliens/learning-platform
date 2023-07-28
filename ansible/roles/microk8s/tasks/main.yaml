@@ -1,0 +1,68 @@
+---
+- name: Install snap
+  become: yes
+  apt:
+    name: snapd
+    state: present
+    update_cache: yes
+  when:
+    - internet is defined
+    - internet | bool
+    - clean is defined
+    - clean | bool
+- name: Create ~/ansible directory
+  become: yes
+  command: mkdir -p ~/ansible
+  register: command_output3
+- debug:
+    var: command_output3.stdout_lines
+- name: Install microk8s
+  become: yes
+  shell: |
+    snap remove microk8s --purge
+    snap download microk8s --target-directory=ansible
+    snap install ansible/microk8s_4055.snap --classic
+  register: command_output2
+  when:
+    - internet is defined
+    - internet | bool
+    - clean is defined
+    - clean | bool
+- debug:
+    var: command_output2.stdout_lines
+  when:
+    - internet is defined
+    - internet | bool
+    - clean is defined
+    - clean | bool
+- name: Copy docker_images.tar
+  become: yes
+  ansible.builtin.copy:
+    src: docker_images.tar
+    dest: ~/ansible/docker_images.tar
+- name: Import docker images to microk8s internal docker image registry
+  become: yes
+  command: microk8s ctr image import ~/ansible/docker_images.tar
+  register: command_output4
+- debug:
+    var: command_output4.stdout_lines
+- name: Show all images in microk8s internal image registry
+  become: yes
+  command: microk8s ctr image list
+  register: command_output5
+- debug:
+    var: command_output5.stdout_lines
+- name: Configure microk8s
+  become: yes
+  command: microk8s enable ingress dns hostpath-storage
+  register: command_output6
+- debug:
+    var: command_output6.stdout_lines
+- name: Configure kube config for current user
+  become: yes
+  shell: |
+    mkdir -p .kube
+    cd .kube
+    microk8s config > config
+    chown {{ ansible_user_id }} config
+    chmod 600 config

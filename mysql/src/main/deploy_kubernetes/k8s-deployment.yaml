@@ -1,0 +1,46 @@
+---
+kind: Deployment
+apiVersion: v1
+metadata:
+  name: @project.artifactId@
+  namespace: learning-platform
+  labels:
+    app: @project.artifactId@
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: @project.artifactId@
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: @project.artifactId@
+    spec:
+      containers:
+        - name: @project.artifactId@
+          image: @project.groupId@/@project.artifactId@:@project.version@
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: pvc
+          ports:
+            - containerPort: 3306
+              name: mysql
+          resources:
+            requests:
+              memory: 751619276800m
+              cpu: 500m
+            limits:
+              memory: 751619276800m
+              cpu: 1000m
+      volumes:
+        - name: pvc
+          persistentVolumeClaim:
+            claimName: @project.artifactId@

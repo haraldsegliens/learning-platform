@@ -1,0 +1,63 @@
+---
+kind: Deployment
+apiVersion: v1
+metadata:
+  name: @project.artifactId@
+  namespace: learning-platform
+  labels:
+    app: @project.artifactId@
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: @project.artifactId@
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: @project.artifactId@
+    spec:
+      containers:
+        - name: @project.artifactId@
+          image: @project.groupId@/@project.artifactId@:@project.version@
+          env:
+            - name: LIMESURVEY_DB_HOST
+              value: mysql
+            - name: LIMESURVEY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: password
+            - name: LIMESURVEY_ADMIN_USER
+              value: admin
+            - name: LIMESURVEY_ADMIN_PASSWORD
+              value: password
+            - name: LIMESURVEY_ADMIN_NAME
+              value: Lime Administrator
+            - name: LIMESURVEY_ADMIN_EMAIL
+              value: lime@lime.lime
+          volumeMounts:
+            - mountPath: /var/www/html/upload
+              name: pvc
+              subPath: limesurvey-upload
+            - mountPath: /var/www/html/plugins
+              name: pvc
+              subPath: limesurvey-plugins
+            - mountPath: /var/www/html/application/config
+              name: pvc
+              subPath: limesurvey-config
+          ports:
+            - containerPort: 80
+              name: http
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 150m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+      volumes:
+        - name: pvc
+          persistentVolumeClaim:
+            claimName: @project.artifactId@

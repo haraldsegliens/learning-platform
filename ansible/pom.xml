@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.haralds.learning-platform</groupId>
+        <artifactId>learning-platform</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>ansible</artifactId>
+    <packaging>pom</packaging>
+
+    <dependencies>
+        <dependency>
+                <groupId>com.haralds.learning-platform</groupId>
+                <artifactId>limesurvey</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>com.haralds.learning-platform</groupId>
+                <artifactId>mysql</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>com.haralds.learning-platform</groupId>
+                <artifactId>wordpress</artifactId>
+            </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+
+                <executions>
+                    <!-- MVN INSTALL: export images to tar -->
+                    <execution>
+                        <id>remove-docker-image</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <scripts>
+                                <script>${project.basedir}/../build_scripts/docker_images_to_tar.groovy</script>
+                            </scripts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <!--
+                    MVN PACKAGE
+                    Move and filter kubernetes yaml files to kubernetes
+                    -->
+                    <execution>
+                        <id>copy-resources-kubernetes</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/kubernetes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>..</directory>
+                                    <includes>
+                                        <include>**/target/deploy_kubernetes/*.yaml</include>
+                                    </includes>
+                                    <excludes>
+                                        <exclude>**/ansible/**/*.yaml</exclude>
+                                    </excludes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>kubernetes</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>roles/microk8s/files</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

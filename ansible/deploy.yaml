@@ -1,0 +1,69 @@
+---
+- name: Deploy server playbook
+  hosts: all
+  vars_prompt:
+    - name: public_host
+      prompt: Host name?
+      private: no
+    - name: clean
+      prompt: Clean deploy?
+      private: no
+      default: yes
+    - name: root_deployment_directory
+      prompt: Enter root deployment_directory
+      private: no
+      default: kubernetes
+    - name: apps
+      prompt: Enter apps to deploy
+      private: no
+      default: mysql, limesurvey, wordpress
+  tasks:
+    - name: Install microk8s
+      include_role:
+        name: microk8s
+    - name: Ansible k8s plugin setup
+      include_role:
+        name: ansible-k8s-plugin
+      when:
+        - clean is defined
+        - clean | bool
+    - name: Delete k8s learning-platform namespace
+      kubernetes.core.k8s:
+        name: learning-platform
+        api_version: v1
+        kind: Namespace
+        state: absent
+        wait: true
+      when:
+        - clean is defined
+        - clean | bool
+    - name: Create k8s learning-platform namespace
+      kubernetes.core.k8s:
+        name: learning-platform
+        api_version: v1
+        kind: Namespace
+        state: present
+        wait: true
+    - name: Deploy k8s component
+      include_role:
+        name: k8s-deployment
+      vars:
+        deployment_directory: "{{ root_deployment_directory + '/' + item }}"
+      loop: "{{ apps.split(',') | map('trim') | list }}"
+      loop_control:
+        label: "{{ item }}"
+    - name: Apply kubernetes patch yaml
+      kubernetes.core.k8s_json_patch:
+        kind: DaemonSet
+        namespace: ingress
+        name: nginx-ingress-microk8s-controller
+        patch:
+          - op: add
+            path: "/spec/template/spec/containers/0/ports"
+            value:
+              - containerPort: 80
+                hostPort: 80
+                protocol: TCP
+              - containerPort: 443
+                hostPort: 443
+                protocol: TCP

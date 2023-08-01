@@ -21,10 +21,10 @@
                 <groupId>com.haralds.learning-platform</groupId>
                 <artifactId>mysql</artifactId>
             </dependency>
-            <!--dependency>
+            <dependency>
                 <groupId>com.haralds.learning-platform</groupId>
                 <artifactId>wordpress</artifactId>
-            </dependency-->
+            </dependency>
     </dependencies>
 
     <build>

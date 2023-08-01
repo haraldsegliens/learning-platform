@@ -22,21 +22,23 @@ spec:
         - name: @project.artifactId@
           image: @project.groupId@/@project.artifactId@:@project.version@
           env:
-            - name: LIMESURVEY_DB_HOST
+            - name: DB_HOST
               value: mysql
-            - name: LIMESURVEY_DB_PASSWORD
+            - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: mysql
                   key: password
-            - name: LIMESURVEY_ADMIN_USER
+            - name: ADMIN_USER
               value: admin
-            - name: LIMESURVEY_ADMIN_PASSWORD
+            - name: ADMIN_PASSWORD
               value: password
-            - name: LIMESURVEY_ADMIN_NAME
+            - name: ADMIN_NAME
               value: Lime Administrator
-            - name: LIMESURVEY_ADMIN_EMAIL
-              value: lime@lime.lime
+            - name: PUBLIC_URL
+              value: "{{ public_host }}/survey"
+            - name: BASE_URL
+              value: "{{ public_host }}/survey"
           volumeMounts:
             - mountPath: /var/www/html/upload
               name: pvc
@@ -48,14 +50,14 @@ spec:
               name: pvc
               subPath: limesurvey-config
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
           resources:
             requests:
-              memory: 256Mi
+              memory: 512Mi
               cpu: 150m
             limits:
-              memory: 512Mi
+              memory: 1024Mi
               cpu: 500m
           startupProbe:
             httpGet:

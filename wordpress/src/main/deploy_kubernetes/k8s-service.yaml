@@ -8,5 +8,5 @@ spec:
   selector:
     app: @project.artifactId@
   ports:
-    - port: 6379
-      name: redis
+    - port: 80
+      name: http

@@ -18,19 +18,29 @@ spec:
     spec:
       containers:
         - name: @project.artifactId@
-          image: redis:6.2.1-alpine3.13
+          image: @project.groupId@/@project.artifactId@:@project.version@
+          env:
+            - name: WORDPRESS_DB_HOST
+              value: mysql
+            - name: WORDPRESS_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: password
+            - name: WORDPRESS_CONFIG_EXTRA
+              value: admin
           volumeMounts:
-            - mountPath: /data
+            - mountPath: /var/www/html
               name: pvc
           ports:
-            - containerPort: 6379
-              name: redis
+            - containerPort: 80
+              name: http
           resources:
             requests:
-              memory: 256Mi
+              memory: 512Mi
               cpu: 150m
             limits:
-              memory: 512Mi
+              memory: 1024Mi
               cpu: 500m
       volumes:
         - name: pvc

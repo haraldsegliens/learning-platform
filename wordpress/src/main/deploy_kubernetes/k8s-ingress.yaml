@@ -11,10 +11,10 @@ spec:
    -  host: {{ public_host }}
       http:
         paths:
-          - path: /survey
+          - path: /
             pathType: Prefix
             backend:
               service:
                 name: @project.artifactId@
                 port:
-                  number: 8080
+                  number: 80

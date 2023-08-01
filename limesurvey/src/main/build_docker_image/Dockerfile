@@ -1,1 +1,1 @@
-FROM acspri/limesurvey:6.1.8
+FROM martialblog/limesurvey:6.1.7-230710-apache

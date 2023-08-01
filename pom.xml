@@ -12,7 +12,7 @@
         <module>ansible</module>
         <module>limesurvey</module>
         <module>mysql</module>
-        <!--module>wordpress</module-->
+        <module>wordpress</module>
     </modules>
 
     <dependencyManagement>
@@ -27,11 +27,11 @@
                 <artifactId>mysql</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <!--dependency>
+            <dependency>
                 <groupId>com.haralds.learning-platform</groupId>
                 <artifactId>wordpress</artifactId>
                 <version>${project.version}</version>
-            </dependency-->
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

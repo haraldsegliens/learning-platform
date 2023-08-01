@@ -9,4 +9,4 @@ spec:
     app: @project.artifactId@
   ports:
     - name: http
-      port: 80
+      port: 8080

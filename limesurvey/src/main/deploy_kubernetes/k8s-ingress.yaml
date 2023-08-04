@@ -8,10 +8,10 @@ metadata:
     kubernetes.io/ingress.class: public
 spec:
   rules:
-   -  host: {{ public_host }}
+   -  host: limesurvey.{{ public_host }}
       http:
         paths:
-          - path: /survey
+          - path: /
             pathType: Prefix
             backend:
               service:

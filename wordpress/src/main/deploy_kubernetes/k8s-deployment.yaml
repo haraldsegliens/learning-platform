@@ -3,7 +3,7 @@ kind: Deployment
 apiVersion: v1
 metadata:
   name: @project.artifactId@
-  namespace: paks
+  namespace: learning-platform
   labels:
     app: @project.artifactId@
 spec:
@@ -22,13 +22,27 @@ spec:
           env:
             - name: WORDPRESS_DB_HOST
               value: mysql
+            - name: WORDPRESS_DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-user
+                  key: database
+            - name: WORDPRESS_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-user
+                  key: username
             - name: WORDPRESS_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql
+                  name: mysql-user
                   key: password
+            - name: WORDPRESS_TABLE_PREFIX
+              value: "wordpress_"
             - name: WORDPRESS_CONFIG_EXTRA
-              value: admin
+              value: >-
+                define('WP_HOME', 'http://{{ public_host }}/');
+                define('WP_SITEURL', 'http://{{ public_host }}/');
           volumeMounts:
             - mountPath: /var/www/html
               name: pvc
@@ -42,6 +56,43 @@ spec:
             limits:
               memory: 1024Mi
               cpu: 500m
+          startupProbe:
+            httpGet:
+              path: /
+              port: 80
+              httpHeaders:
+                - name: X-Forwarded-Proto
+                  value: http
+                - name: X-Forwarded-Host
+                  value: "{{ public_host }}"
+                - name: Host
+                  value: "{{ public_host }}"
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+              httpHeaders:
+                - name: X-Forwarded-Proto
+                  value: http
+                - name: X-Forwarded-Host
+                  value: "{{ public_host }}"
+                - name: Host
+                  value: "{{ public_host }}"
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+              httpHeaders:
+                - name: X-Forwarded-Proto
+                  value: http
+                - name: X-Forwarded-Host
+                  value: "{{ public_host }}"
+                - name: Host
+                  value: "{{ public_host }}"
+            periodSeconds: 5
       volumes:
         - name: pvc
           persistentVolumeClaim:

@@ -25,7 +25,22 @@ spec:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: @project.artifactId@
+                  name: @project.artifactId@-root
+                  key: password
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: @project.artifactId@-user
+                  key: database
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: @project.artifactId@-user
+                  key: username
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: @project.artifactId@-user
                   key: password
           volumeMounts:
             - mountPath: /var/lib/mysql

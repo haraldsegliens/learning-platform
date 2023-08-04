@@ -24,11 +24,25 @@ spec:
           env:
             - name: DB_HOST
               value: mysql
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-user
+                  key: database
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-user
+                  key: username
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql
+                  name: mysql-user
                   key: password
+            - name: DB_TABLE_PREFIX
+              value: limesurvey_
+            - name: DBENGINE
+              value: MyISAM
             - name: ADMIN_USER
               value: admin
             - name: ADMIN_PASSWORD
@@ -36,9 +50,9 @@ spec:
             - name: ADMIN_NAME
               value: Lime Administrator
             - name: PUBLIC_URL
-              value: "{{ public_host }}/survey"
+              value: "http://limesurvey.{{ public_host }}"
             - name: BASE_URL
-              value: "{{ public_host }}/survey"
+              value: "http://limesurvey.{{ public_host }}"
           volumeMounts:
             - mountPath: /var/www/html/upload
               name: pvc
@@ -46,9 +60,9 @@ spec:
             - mountPath: /var/www/html/plugins
               name: pvc
               subPath: limesurvey-plugins
-            - mountPath: /var/www/html/application/config
-              name: pvc
-              subPath: limesurvey-config
+            #- mountPath: /var/www/html/application/config
+            #  name: pvc
+            #  subPath: limesurvey-config
           ports:
             - containerPort: 8080
               name: http

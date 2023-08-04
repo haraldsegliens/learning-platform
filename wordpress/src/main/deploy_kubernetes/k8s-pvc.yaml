@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: @project.artifactId@
-  namespace: paks
+  namespace: learning-platform
 spec:
   accessModes:
     - ReadWriteOnce

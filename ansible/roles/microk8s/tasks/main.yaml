@@ -6,8 +6,6 @@
     state: present
     update_cache: yes
   when:
-    - internet is defined
-    - internet | bool
     - clean is defined
     - clean | bool
 - name: Create ~/ansible directory
@@ -20,19 +18,14 @@
   become: yes
   shell: |
     snap remove microk8s --purge
-    snap download microk8s --target-directory=ansible
-    snap install ansible/microk8s_4055.snap --classic
+    snap install microk8s --classic
   register: command_output2
   when:
-    - internet is defined
-    - internet | bool
     - clean is defined
     - clean | bool
 - debug:
     var: command_output2.stdout_lines
   when:
-    - internet is defined
-    - internet | bool
     - clean is defined
     - clean | bool
 - name: Copy docker_images.tar
@@ -40,16 +33,13 @@
   ansible.builtin.copy:
     src: docker_images.tar
     dest: ~/ansible/docker_images.tar
-  register: docker_images
 - name: Import docker images to microk8s internal docker image registry
-  when: docker_images.changed
   become: yes
   command: microk8s ctr image import ~/ansible/docker_images.tar
   register: command_output4
 - debug:
     var: command_output4.stdout_lines
 - name: Show all images in microk8s internal image registry
-  when: docker_images.changed
   become: yes
   command: microk8s ctr image list
   register: command_output5

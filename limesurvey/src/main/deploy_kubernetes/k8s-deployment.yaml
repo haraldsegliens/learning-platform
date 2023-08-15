@@ -51,8 +51,6 @@ spec:
               value: Lime Administrator
             - name: PUBLIC_URL
               value: "http://limesurvey.{{ public_host }}"
-            - name: BASE_URL
-              value: "http://limesurvey.{{ public_host }}"
           volumeMounts:
             - mountPath: /var/www/html/upload
               name: pvc

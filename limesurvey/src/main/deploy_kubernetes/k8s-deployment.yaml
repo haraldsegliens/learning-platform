@@ -43,8 +43,6 @@ spec:
               value: limesurvey_
             - name: DBENGINE
               value: MyISAM
-            - name: TABLE_SESSION
-              value: true
             - name: ADMIN_USER
               value: admin
             - name: ADMIN_PASSWORD
@@ -60,6 +58,9 @@ spec:
             - mountPath: /var/www/html/plugins
               name: pvc
               subPath: limesurvey-plugins
+            - mountPath: /var/www/html/tmp
+              name: pvc
+              subPath: limesurvey-tmp
             #- mountPath: /var/www/html/application/config
             #  name: pvc
             #  subPath: limesurvey-config

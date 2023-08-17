@@ -43,8 +43,6 @@ spec:
               value: limesurvey_
             - name: DBENGINE
               value: MyISAM
-            - name: TABLE_SESSION
-              value: true
             - name: ADMIN_USER
               value: admin
             - name: ADMIN_PASSWORD

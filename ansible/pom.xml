@@ -23,6 +23,10 @@
             </dependency>
             <dependency>
                 <groupId>com.haralds.learning-platform</groupId>
+                <artifactId>redis</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>com.haralds.learning-platform</groupId>
                 <artifactId>wordpress</artifactId>
             </dependency>
     </dependencies>

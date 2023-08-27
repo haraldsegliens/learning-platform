@@ -41,8 +41,8 @@ spec:
               value: "wordpress_"
             - name: WORDPRESS_CONFIG_EXTRA
               value: >-
-                define('WP_HOME', 'http://{{ public_host }}/');
-                define('WP_SITEURL', 'http://{{ public_host }}/');
+                define('WP_HOME', 'https://{{ public_host_with_port }}/');
+                define('WP_SITEURL', 'https://{{ public_host_with_port }}/');
           volumeMounts:
             - mountPath: /var/www/html
               name: pvc

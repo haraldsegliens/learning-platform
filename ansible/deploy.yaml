@@ -5,6 +5,9 @@
     - name: public_host
       prompt: Host name?
       private: no
+    - name: public_host_with_port
+      prompt: Host name and port (if used)?
+      private: no
     - name: clean
       prompt: Clean deploy?
       private: no

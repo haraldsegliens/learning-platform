@@ -95,20 +95,19 @@ spec:
               memory: 1024Mi
               cpu: 500m
           startupProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: http
             failureThreshold: 30
             periodSeconds: 10
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: http
+            initialDelaySeconds: 3
             periodSeconds: 5
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: http
+            initialDelaySeconds: 3
             periodSeconds: 5
       volumes:
         - name: pvc

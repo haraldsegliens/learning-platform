@@ -19,7 +19,7 @@
     - name: apps
       prompt: Enter apps to deploy
       private: no
-      default: mysql, limesurvey, wordpress
+      default: mysql, limesurvey, redis, wordpress
   tasks:
     - name: Install microk8s
       include_role:

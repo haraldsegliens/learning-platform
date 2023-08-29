@@ -120,6 +120,13 @@ return array(
       'charset' => '$DB_CHARSET',
       'tablePrefix' => '${DB_TABLE_PREFIX//[[:space:]]/}'
     ),
+    'cache'=>array(
+        'class'=>'CRedisCache',
+        'hostname'=>'$REDIS_HOST',
+        'port'=>$REDIS_PORT,
+        'database'=>$REDIS_DATABASE,
+        'options'=>STREAM_CLIENT_CONNECT,
+    ),
     'session'=>array(
         'class' => 'CCacheHttpSession'
     ),

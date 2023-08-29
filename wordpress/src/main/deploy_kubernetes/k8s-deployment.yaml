@@ -7,7 +7,7 @@ metadata:
   labels:
     app: @project.artifactId@
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: @project.artifactId@
@@ -51,47 +51,25 @@ spec:
               name: http
           resources:
             requests:
-              memory: 512Mi
-              cpu: 150m
+              memory: 400Mi
+              cpu: 250m
             limits:
-              memory: 1024Mi
-              cpu: 500m
+              memory: 1000Mi
+              cpu: 1500m
           startupProbe:
-            httpGet:
-              path: /
-              port: 80
-              httpHeaders:
-                - name: X-Forwarded-Proto
-                  value: http
-                - name: X-Forwarded-Host
-                  value: "{{ public_host }}"
-                - name: Host
-                  value: "{{ public_host }}"
+            tcpSocket:
+              port: http
             failureThreshold: 30
             periodSeconds: 10
           readinessProbe:
-            httpGet:
-              path: /
-              port: 80
-              httpHeaders:
-                - name: X-Forwarded-Proto
-                  value: http
-                - name: X-Forwarded-Host
-                  value: "{{ public_host }}"
-                - name: Host
-                  value: "{{ public_host }}"
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 3
             periodSeconds: 5
           livenessProbe:
-            httpGet:
-              path: /
-              port: 80
-              httpHeaders:
-                - name: X-Forwarded-Proto
-                  value: http
-                - name: X-Forwarded-Host
-                  value: "{{ public_host }}"
-                - name: Host
-                  value: "{{ public_host }}"
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 3
             periodSeconds: 5
       volumes:
         - name: pvc

@@ -1,0 +1,16 @@
+---
+- name: Apply kubernetes patch yaml
+  kubernetes.core.k8s_json_patch:
+    kind: DaemonSet
+    namespace: ingress
+    name: nginx-ingress-microk8s-controller
+    patch:
+      - op: add
+        path: "/spec/template/spec/containers/0/ports"
+        value:
+          - containerPort: 80
+            hostPort: 80
+            protocol: TCP
+          - containerPort: 443
+            hostPort: 443
+            protocol: TCP

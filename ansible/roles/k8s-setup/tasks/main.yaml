@@ -1,0 +1,68 @@
+---
+- name: Delete k8s survey-platform namespace
+  kubernetes.core.k8s:
+    name: survey-platform
+    api_version: v1
+    kind: Namespace
+    state: absent
+    wait: true
+  when:
+    - clean is defined
+    - clean | bool
+- name: Create k8s survey-platform namespace
+  kubernetes.core.k8s:
+    name: survey-platform
+    api_version: v1
+    kind: Namespace
+    state: present
+    wait: true
+- name: Copy tls.crt to remote
+  become: yes
+  ansible.builtin.copy:
+    src: tls.crt
+    dest: ~/ansible/tls.crt
+  when:
+    - tls is defined
+    - tls | bool
+- name: Copy tls.key to remote
+  become: yes
+  ansible.builtin.copy:
+    src: tls.key
+    dest: ~/ansible/tls.key
+  when:
+    - tls is defined
+    - tls | bool
+- name: Read tls.crt
+  become: yes
+  slurp:
+    src: ~/ansible/tls.crt
+  register: tls_crt_slurp
+  when:
+    - tls is defined
+    - tls | bool
+- name: Read tls.key
+  become: yes
+  slurp:
+    src: ~/ansible/tls.key
+  register: tls_key_slurp
+  when:
+    - tls is defined
+    - tls | bool
+- name: Create tls-secret
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: tls-secret
+        namespace: survey-platform
+      type: kubernetes.io/tls
+      stringData:
+        tls.crt: |
+          {{ tls_crt_slurp.content|b64decode }}
+        tls.key: |
+          {{ tls_key_slurp.content|b64decode }}
+  when:
+    - tls is defined
+    - tls | bool

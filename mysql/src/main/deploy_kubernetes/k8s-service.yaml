@@ -3,7 +3,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: @project.artifactId@
-  namespace: learning-platform
+  namespace: survey-platform
 spec:
   selector:
     app: @project.artifactId@

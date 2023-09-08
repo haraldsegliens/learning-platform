@@ -3,7 +3,7 @@ kind: Deployment
 apiVersion: v1
 metadata:
   name: @project.artifactId@
-  namespace: learning-platform
+  namespace: survey-platform
   labels:
     app: @project.artifactId@
 spec:

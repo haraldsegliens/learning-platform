@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.haralds.learning-platform</groupId>
-    <artifactId>learning-platform</artifactId>
+    <groupId>com.charlydefense.survey-platform</groupId>
+    <artifactId>survey-platform</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
@@ -19,22 +19,22 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.haralds.learning-platform</groupId>
+                <groupId>com.charlydefense.survey-platform</groupId>
                 <artifactId>limesurvey</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.haralds.learning-platform</groupId>
+                <groupId>com.charlydefense.survey-platform</groupId>
                 <artifactId>mysql</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.haralds.learning-platform</groupId>
+                <groupId>com.charlydefense.survey-platform</groupId>
                 <artifactId>redis</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.haralds.learning-platform</groupId>
+                <groupId>com.charlydefense.survey-platform</groupId>
                 <artifactId>wordpress</artifactId>
                 <version>${project.version}</version>
             </dependency>

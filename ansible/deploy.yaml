@@ -3,15 +3,19 @@
   hosts: all
   vars_prompt:
     - name: public_host
-      prompt: Host name?
+      prompt: "Host name? Example: learningplatform.com"
       private: no
-    - name: public_host_with_port
-      prompt: Host name and port (if used)?
+    - name: public_url
+      prompt: "Scheme, Host name and port (if used)? Examples: \"https://learningplatform.com\", \"https://learningplatform.com:7443\""
       private: no
     - name: clean
       prompt: Clean deploy?
       private: no
-      default: yes
+      default: no
+    - name: tls
+      prompt: "Configure TLS? Note: tls.key and tls.crt files must be present at roles/k8s-setup/files directory"
+      private: no
+      default: no
     - name: root_deployment_directory
       prompt: Enter root deployment_directory
       private: no
@@ -30,23 +34,9 @@
       when:
         - clean is defined
         - clean | bool
-    - name: Delete k8s learning-platform namespace
-      kubernetes.core.k8s:
-        name: learning-platform
-        api_version: v1
-        kind: Namespace
-        state: absent
-        wait: true
-      when:
-        - clean is defined
-        - clean | bool
-    - name: Create k8s learning-platform namespace
-      kubernetes.core.k8s:
-        name: learning-platform
-        api_version: v1
-        kind: Namespace
-        state: present
-        wait: true
+    - name: Setup for k8s
+      include_role:
+        name: k8s-setup
     - name: Deploy k8s component
       include_role:
         name: k8s-deployment
@@ -55,18 +45,6 @@
       loop: "{{ apps.split(',') | map('trim') | list }}"
       loop_control:
         label: "{{ item }}"
-    - name: Apply kubernetes patch yaml
-      kubernetes.core.k8s_json_patch:
-        kind: DaemonSet
-        namespace: ingress
-        name: nginx-ingress-microk8s-controller
-        patch:
-          - op: add
-            path: "/spec/template/spec/containers/0/ports"
-            value:
-              - containerPort: 80
-                hostPort: 80
-                protocol: TCP
-              - containerPort: 443
-                hostPort: 443
-                protocol: TCP
+    - name: Post setup for k8s
+      include_role:
+        name: k8s-post-setup

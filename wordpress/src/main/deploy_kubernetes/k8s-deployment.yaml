@@ -3,7 +3,7 @@ kind: Deployment
 apiVersion: v1
 metadata:
   name: @project.artifactId@
-  namespace: learning-platform
+  namespace: survey-platform
   labels:
     app: @project.artifactId@
 spec:
@@ -41,8 +41,8 @@ spec:
               value: "wordpress_"
             - name: WORDPRESS_CONFIG_EXTRA
               value: >-
-                define('WP_HOME', 'https://{{ public_host_with_port }}/');
-                define('WP_SITEURL', 'https://{{ public_host_with_port }}/');
+                define('WP_HOME', '{{ public_url }}/');
+                define('WP_SITEURL', '{{ public_url }}/');
           volumeMounts:
             - mountPath: /var/www/html
               name: pvc

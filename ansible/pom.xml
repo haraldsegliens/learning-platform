@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.haralds.learning-platform</groupId>
-        <artifactId>learning-platform</artifactId>
+        <groupId>com.charlydefense.survey-platform</groupId>
+        <artifactId>survey-platform</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -14,19 +14,19 @@
 
     <dependencies>
         <dependency>
-                <groupId>com.haralds.learning-platform</groupId>
+                <groupId>com.charlydefense.survey-platform</groupId>
                 <artifactId>limesurvey</artifactId>
             </dependency>
             <dependency>
-                <groupId>com.haralds.learning-platform</groupId>
+                <groupId>com.charlydefense.survey-platform</groupId>
                 <artifactId>mysql</artifactId>
             </dependency>
             <dependency>
-                <groupId>com.haralds.learning-platform</groupId>
+                <groupId>com.charlydefense.survey-platform</groupId>
                 <artifactId>redis</artifactId>
             </dependency>
             <dependency>
-                <groupId>com.haralds.learning-platform</groupId>
+                <groupId>com.charlydefense.survey-platform</groupId>
                 <artifactId>wordpress</artifactId>
             </dependency>
     </dependencies>

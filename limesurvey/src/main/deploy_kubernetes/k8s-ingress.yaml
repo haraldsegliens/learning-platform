@@ -3,15 +3,17 @@ kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
   name: @project.artifactId@
-  namespace: learning-platform
+  namespace: survey-platform
   annotations:
     kubernetes.io/ingress.class: public
     nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
+{% if tls | bool %}
   tls:
     - hosts:
         - {{ public_host }}
       secretName: tls-secret
+{% endif %}
   rules:
    -  host: {{ public_host }}
       http:

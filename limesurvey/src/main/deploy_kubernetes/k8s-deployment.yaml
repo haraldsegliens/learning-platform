@@ -3,7 +3,7 @@ kind: Deployment
 apiVersion: v1
 metadata:
   name: @project.artifactId@
-  namespace: learning-platform
+  namespace: survey-platform
   labels:
     app: @project.artifactId@
 spec:
@@ -67,17 +67,23 @@ spec:
             - name: REDIS_PORT
               value: "6379"
             - name: ADMIN_USER
-              value: admin
+              valueFrom:
+                secretKeyRef:
+                  name: @project.artifactId@-admin
+                  key: username
             - name: ADMIN_PASSWORD
-              value: password
+              valueFrom:
+                secretKeyRef:
+                  name: @project.artifactId@-admin
+                  key: password
             - name: ADMIN_NAME
               value: Lime Administrator
             - name: PUBLIC_URL
-              value: "https://{{ public_host_with_port }}/limesurvey"
+              value: "{{ public_url }}/limesurvey"
             - name: BASE_URL
               value: "/limesurvey"
             - name: HOST_INFO
-              value: "https://{{ public_host_with_port }}"
+              value: "{{ public_url }}"
           volumeMounts:
             - mountPath: /var/www/html/upload
               name: pvc
